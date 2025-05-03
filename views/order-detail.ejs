@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Pesanan #<%= order.order_number %> - ShopX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .order-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .order-card {
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+    }
+    
+    .order-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      background-color: #f9f9f9;
+    }
+    
+    .order-body {
+      padding: 20px;
+    }
+    
+    .order-item {
+      padding: 15px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .order-item:last-child {
+      border-bottom: none;
+    }
+    
+    .order-total {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #6a11cb;
+    }
+    
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .status-pending {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    
+    .status-processing {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+    
+    .status-shipped {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    
+    .status-delivered {
+      background-color: #cce5ff;
+      color: #004085;
+    }
+    
+    .status-cancelled {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #5910a0 0%, #1e65d6 100%);
+    }
+    
+    .btn-outline-primary {
+      color: #6a11cb;
+      border-color: #6a11cb;
+    }
+    
+    .btn-outline-primary:hover {
+      background-color: #6a11cb;
+      color: white;
+    }
+    
+    .secure-badge {
+      display: inline-block;
+      background-color: #f8f9fa;
+      padding: 4px 8px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      margin-top: 5px;
+    }
+    
+    .progress-container {
+      margin: 30px 0;
+    }
+    
+    .progress-track {
+      position: relative;
+      height: 5px;
+      background: #ddd;
+      margin-bottom: 60px;
+      border-radius: 10px;
+    }
+    
+    .progress-step {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: white;
+      border: 5px solid #ddd;
+      top: -13px;
+      text-align: center;
+      color: #555;
+    }
+    
+    .progress-step.completed {
+      border-color: #6a11cb;
+      background: #6a11cb;
+      color: white;
+    }
+    
+    .progress-step.active {
+      border-color: #6a11cb;
+      background: white;
+      color: #6a11cb;
+    }
+    
+    .progress-step:nth-child(1) { left: 0%; }
+    .progress-step:nth-child(2) { left: 33%; }
+    .progress-step:nth-child(3) { left: 67%; }
+    .progress-step:nth-child(4) { left: 100%; }
+    
+    .progress-label {
+      position: absolute;
+      white-space: nowrap;
+      top: 30px;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+    }
+    
+    .progress-percent {
+      position: absolute;
+      height: 5px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      transition: width 0.3s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header/Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="fas fa-shopping-bag me-2"></i>ShopX
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Beranda</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/products">Produk</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">Tentang Kami</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Kontak</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/cart">
+              <i class="fas fa-shopping-cart me-1"></i>Keranjang
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-user me-1"></i><%= user.username %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+              <li><a class="dropdown-item" href="/users/profile">Profil</a></li>
+              <li><a class="dropdown-item" href="/orders/history">Pesanan</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/logout">Keluar</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Order Detail Content -->
+  <div class="container py-5 order-container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Beranda</a></li>
+        <li class="breadcrumb-item"><a href="/orders/history" class="text-decoration-none">Riwayat Pesanan</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Detail Pesanan #<%= order.order_number %></li>
+      </ol>
+    </nav>
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Detail Pesanan #<%= order.order_number %></h2>
+      
+      <%
+        let statusClass = '';
+        let statusText = '';
+        
+        switch(order.status) {
+          case 'pending':
+            statusClass = 'status-pending';
+            statusText = 'Menunggu Pembayaran';
+            break;
+          case 'processing':
+            statusClass = 'status-processing';
+            statusText = 'Diproses';
+            break;
+          case 'shipped':
+            statusClass = 'status-shipped';
+            statusText = 'Dikirim';
+            break;
+          case 'delivered':
+            statusClass = 'status-delivered';
+            statusText = 'Diterima';
+            break;
+          case 'cancelled':
+            statusClass = 'status-cancelled';
+            statusText = 'Dibatalkan';
+            break;
+          default:
+            statusClass = 'status-pending';
+            statusText = 'Menunggu Pembayaran';
+        }
+      %>
+      
+      <span class="status-badge <%= statusClass %>">
+        <%= statusText %>
+      </span>
+    </div>
+    
+    <!-- Order Status Progress -->
+    <% if (order.status !== 'cancelled') { %>
+      <div class="progress-container">
+        <div class="progress-track">
+          <%
+            let progressPercent = 0;
+            
+            switch(order.status) {
+              case 'pending':
+                progressPercent = 0;
+                break;
+              case 'processing':
+                progressPercent = 33;
+                break;
+              case 'shipped':
+                progressPercent = 67;
+                break;
+              case 'delivered':
+                progressPercent = 100;
+                break;
+              default:
+                progressPercent = 0;
+            }
+          %>
+          
+          <div class="progress-percent" style="width: <%= progressPercent %>%;"></div>
+          
+          <div class="progress-step <%= progressPercent >= 0 ? 'completed' : '' %>">
+            <i class="fas fa-check"></i>
+            <span class="progress-label">Pesanan Dibuat</span>
+          </div>
+          
+          <div class="progress-step <%= progressPercent >= 33 ? 'completed' : (order.status === 'pending' ? 'active' : '') %>">
+            <i class="fas <%= progressPercent >= 33 ? 'fa-check' : 'fa-box' %>"></i>
+            <span class="progress-label">Diproses</span>
+          </div>
+          
+          <div class="progress-step <%= progressPercent >= 67 ? 'completed' : (order.status === 'processing' ? 'active' : '') %>">
+            <i class="fas <%= progressPercent >= 67 ? 'fa-check' : 'fa-truck' %>"></i>
+            <span class="progress-label">Dikirim</span>
+          </div>
+          
+          <div class="progress-step <%= progressPercent >= 100 ? 'completed' : (order.status === 'shipped' ? 'active' : '') %>">
+            <i class="fas <%= progressPercent >= 100 ? 'fa-check' : 'fa-home' %>"></i>
+            <span class="progress-label">Diterima</span>
+          </div>
+        </div>
+      </div>
+    <% } %>
+    
+    <div class="row">
+      <!-- Order Information -->
+      <div class="col-lg-4 mb-4">
+        <div class="order-card">
+          <div class="order-header">
+            <h5 class="mb-0">Informasi Pesanan</h5>
+          </div>
+          <div class="order-body">
+            <p class="mb-2">
+              <strong>ID Pesanan:</strong>
+              <span class="float-end">#<%= order.order_number %></span>
+            </p>
+            <p class="mb-2">
+              <strong>Tanggal Pemesanan:</strong>
+              <span class="float-end"><%= new Date(order.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+            </p>
+            <p class="mb-2">
+              <strong>Status:</strong>
+              <span class="float-end status-badge <%= statusClass %>"><%= statusText %></span>
+            </p>
+            <p class="mb-2">
+              <strong>Metode Pembayaran:</strong>
+              <span class="float-end">
+                <% if (order.payment_method === 'credit_card') { %>
+                  <i class="fab fa-cc-visa me-1"></i>Kartu Kredit
+                <% } else if (order.payment_method === 'paypal') { %>
+                  <i class="fab fa-paypal me-1"></i>PayPal
+                <% } else if (order.payment_method === 'bank_transfer') { %>
+                  <i class="fas fa-university me-1"></i>Transfer Bank
+                <% } else { %>
+                  Transfer Bank
+                <% } %>
+              </span>
+            </p>
+            
+            <% if (order.status === 'pending') { %>
+              <div class="mt-4">
+                <a href="/orders/<%= order.id %>/pay" class="btn btn-primary w-100">
+                  <i class="fas fa-credit-card me-2"></i>Bayar Sekarang
+                </a>
+                <button type="button" class="btn btn-outline-danger w-100 mt-2" onclick="cancelOrder('<%= order.id %>')">
+                  <i class="fas fa-times me-2"></i>Batalkan Pesanan
+                </button>
+              </div>
+            <% } else if (order.status === 'delivered') { %>
+              <div class="mt-4">
+                <a href="/orders/<%= order.id %>/review" class="btn btn-outline-primary w-100">
+                  <i class="fas fa-star me-2"></i>Berikan Ulasan
+                </a>
+              </div>
+            <% } %>
+          </div>
+        </div>
+        
+        <!-- Shipping Address -->
+        <div class="order-card">
+          <div class="order-header">
+            <h5 class="mb-0">Alamat Pengiriman</h5>
+          </div>
+          <div class="order-body">
+            <p class="mb-0"><%= order.shipping_address %></p>
+            <div class="secure-badge">
+              <i class="fas fa-lock me-1"></i>Terenkripsi dengan AES-256
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Order Items -->
+      <div class="col-lg-8">
+        <div class="order-card">
+          <div class="order-header">
+            <h5 class="mb-0">Item Pesanan</h5>
+          </div>
+          <div class="order-body">
+            <% order.items.forEach(function(item) { %>
+              <div class="order-item">
+                <div class="row align-items-center">
+                  <div class="col-md-2 col-3">
+                    <img src="<%= item.image_url || 'https://via.placeholder.com/60x60?text=No+Image' %>" alt="<%= item.name %>" class="img-fluid rounded" style="max-width: 60px;">
+                  </div>
+                  <div class="col-md-5 col-9">
+                    <h6 class="mb-0"><%= item.name %></h6>
+                    <small class="text-muted">Jumlah: <%= item.quantity %></small>
+                  </div>
+                  <div class="col-md-2 col-6 mt-2 mt-md-0">
+                    <div class="text-muted small">Harga</div>
+                    <div>Rp <%= item.price.toLocaleString('id-ID') %></div>
+                  </div>
+                  <div class="col-md-3 col-6 mt-2 mt-md-0 text-end">
+                    <div class="text-muted small">Subtotal</div>
+                    <div class="fw-bold">Rp <%= (item.price * item.quantity).toLocaleString('id-ID') %></div>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+            
+            <!-- Order Summary -->
+            <div class="mt-4 p-3 bg-light rounded">
+              <div class="row">
+                <div class="col-md-8">
+                  <p class="mb-1">Subtotal</p>
+                  <p class="mb-1">Pengiriman</p>
+                  <p class="mb-1">Pajak (11%)</p>
+                  <p class="mb-0 fw-bold">Total</p>
+                </div>
+                <div class="col-md-4 text-end">
+                  <% const subtotal = order.total_amount / 1.11; %>
+                  <% const tax = order.total_amount - subtotal; %>
+                  
+                  <p class="mb-1">Rp <%= subtotal.toLocaleString('id-ID', { maximumFractionDigits: 0 }) %></p>
+                  <p class="mb-1">Gratis</p>
+                  <p class="mb-1">Rp <%= tax.toLocaleString('id-ID', { maximumFractionDigits: 0 }) %></p>
+                  <p class="mb-0 order-total">Rp <%= order.total_amount.toLocaleString('id-ID') %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <% if (order.notes) { %>
+          <!-- Order Notes -->
+          <div class="order-card mt-4">
+            <div class="order-header">
+              <h5 class="mb-0">Catatan Pesanan</h5>
+            </div>
+            <div class="order-body">
+              <p class="mb-0"><%= order.notes %></p>
+            </div>
+          </div>
+        <% } %>
+        
+        <!-- Actions -->
+        <div class="mt-4 text-end">
+          <a href="/orders/history" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar Pesanan
+          </a>
+          
+          <button class="btn btn-primary ms-2" onclick="window.print()">
+            <i class="fas fa-print me-2"></i>Cetak Detail
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4 mt-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0">&copy; 2023 ShopX. Hak Cipta Dilindungi.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <p class="mb-0">Dilindungi oleh enkripsi AES-256</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Cancel order function
+    function cancelOrder(orderId) {
+      if (confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')) {
+        fetch(`/orders/${orderId}/cancel`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.reload();
+          } else {
+            alert('Gagal membatalkan pesanan: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat membatalkan pesanan');
+        });
+      }
+    }
+  </script>
+</body>
+</html> 

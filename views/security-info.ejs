@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informasi Keamanan ShopX</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <style>
+    .security-icon {
+      font-size: 3rem;
+      color: #0d6efd;
+    }
+    .security-card {
+      border-radius: 15px;
+      transition: transform 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .security-card:hover {
+      transform: translateY(-5px);
+    }
+    .section-title {
+      position: relative;
+      padding-bottom: 15px;
+      margin-bottom: 30px;
+    }
+    .section-title:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100px;
+      height: 3px;
+      background-color: #0d6efd;
+    }
+    .badge-enhanced {
+      background-color: #5a23c8;
+      color: white;
+      font-weight: normal;
+      padding: 5px 10px;
+    }
+    .security-level-standard {
+      color: #0d6efd;
+      border: 1px solid #0d6efd;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      background-color: rgba(13, 110, 253, 0.1);
+    }
+    .security-level-double {
+      color: #5a23c8;
+      border: 1px solid #5a23c8;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      background-color: rgba(90, 35, 200, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header dan Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="fas fa-shopping-cart me-2"></i>ShopX
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Beranda</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/products">Produk</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/security-info">Keamanan</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/cart">
+              <i class="fas fa-shopping-cart me-1"></i>Keranjang
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-user me-1"></i>Akun
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/orders">Pesanan Saya</a></li>
+              <li><a class="dropdown-item" href="/profile">Profil</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/logout">Keluar</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Konten Utama -->
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <h1 class="text-center mb-4">Sistem Keamanan ShopX</h1>
+        <div class="alert alert-info mb-5">
+          <p class="mb-0"><i class="fas fa-shield-alt me-2"></i>ShopX mengutamakan keamanan data pengguna dengan standar industri terkini dan teknologi enkripsi berlapis</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bagian Enkripsi -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <h2 class="section-title">Teknologi Enkripsi</h2>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="card security-card h-100">
+          <div class="card-body p-4">
+            <div class="text-center mb-3">
+              <i class="fas fa-lock security-icon"></i>
+            </div>
+            <h4 class="card-title text-center">Enkripsi AES-256</h4>
+            <p class="card-text">
+              <span class="security-level-standard float-end">Standar</span>
+              ShopX menggunakan algoritma enkripsi AES-256 untuk melindungi data sensitif Anda, seperti nama pemegang kartu dan tanggal kadaluarsa. AES-256 adalah standar industri yang diakui secara global dan digunakan oleh institusi finansial dan pemerintahan.
+            </p>
+            <ul class="list-group list-group-flush mb-3">
+              <li class="list-group-item">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Panjang kunci 256-bit, yang akan membutuhkan waktu miliaran tahun untuk diretas
+              </li>
+              <li class="list-group-item">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Diakui oleh NIST (National Institute of Standards and Technology)
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="card security-card h-100">
+          <div class="card-body p-4">
+            <div class="text-center mb-3">
+              <i class="fas fa-shield-alt security-icon"></i>
+              <span class="badge badge-enhanced position-absolute top-0 end-0 m-3">Ditingkatkan</span>
+            </div>
+            <h4 class="card-title text-center">Enkripsi Ganda</h4>
+            <p class="card-text">
+              <span class="security-level-double float-end">Tinggi (Double)</span>
+              Untuk data yang sangat sensitif seperti nomor kartu kredit, CVV, dan alamat pengiriman, ShopX mengimplementasikan sistem enkripsi ganda yang menggabungkan beberapa teknik enkripsi untuk keamanan maksimal.
+            </p>
+            <ul class="list-group list-group-flush mb-3">
+              <li class="list-group-item">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Multi-layer encryption (AES-256 + algoritma sekunder)
+              </li>
+              <li class="list-group-item">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                PBKDF2 key derivation dengan 10.000 iterasi untuk pengacakan kunci
+              </li>
+              <li class="list-group-item">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                HMAC verification untuk memastikan integritas data
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bagian Data yang Dilindungi -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <h2 class="section-title">Data yang Dilindungi</h2>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card security-card h-100">
+          <div class="card-body p-4">
+            <div class="text-center mb-3">
+              <i class="fas fa-address-card security-icon"></i>
+            </div>
+            <h5 class="card-title">Data Pengguna</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Email
+                <span>Enkripsi TLS saat transfer</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Password
+                <span>Hashing dengan bcrypt</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Nomor Telepon
+                <span class="security-level-standard">Enkripsi Standar</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Alamat
+                <span class="security-level-double">Enkripsi Ganda</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card security-card h-100">
+          <div class="card-body p-4">
+            <div class="text-center mb-3">
+              <i class="fas fa-credit-card security-icon"></i>
+            </div>
+            <h5 class="card-title">Informasi Pembayaran</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Nomor Kartu Kredit
+                <span class="security-level-double">Enkripsi Ganda</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Nama Pemegang Kartu
+                <span class="security-level-standard">Enkripsi Standar</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Tanggal Kadaluarsa
+                <span class="security-level-standard">Enkripsi Standar</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                CVV
+                <span class="security-level-double">Enkripsi Ganda</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card security-card h-100">
+          <div class="card-body p-4">
+            <div class="text-center mb-3">
+              <i class="fas fa-truck security-icon"></i>
+            </div>
+            <h5 class="card-title">Data Pesanan</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Alamat Pengiriman
+                <span class="security-level-double">Enkripsi Ganda</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Detail Pesanan
+                <span>Perlindungan TLS</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Riwayat Transaksi
+                <span>Perlindungan Akses</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bagian Kepatuhan -->
+    <div class="row">
+      <div class="col-12">
+        <h2 class="section-title">Kepatuhan & Regulasi</h2>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="card security-card h-100">
+          <div class="card-body p-4">
+            <h5 class="card-title">
+              <i class="fas fa-certificate me-2 text-success"></i>
+              Kepatuhan PCI-DSS
+            </h5>
+            <p>ShopX berkomitmen untuk memenuhi standar keamanan pembayaran yang ditetapkan oleh Payment Card Industry Data Security Standard (PCI-DSS). Sistem keamanan kami dirancang untuk memenuhi atau melebihi persyaratan berikut:</p>
+            <ul>
+              <li>Enkripsi data kartu pembayaran saat penyimpanan dan transmisi</li>
+              <li>Pengelolaan akses dengan prinsip "least privilege"</li>
+              <li>Proteksi dari serangan malware dan akses tidak sah</li>
+              <li>Pemantauan keamanan jaringan secara rutin</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="card security-card h-100">
+          <div class="card-body p-4">
+            <h5 class="card-title">
+              <i class="fas fa-gavel me-2 text-success"></i>
+              Kepatuhan GDPR
+            </h5>
+            <p>Sebagai komitmen terhadap perlindungan data pribadi, ShopX mematuhi peraturan GDPR (General Data Protection Regulation) dengan:</p>
+            <ul>
+              <li>Menyediakan kontrol dan transparansi tentang data pengguna</li>
+              <li>Menerapkan prinsip "Privacy by Design" dalam sistem kami</li>
+              <li>Membatasi pengumpulan data hanya pada yang diperlukan</li>
+              <li>Memberikan pilihan untuk menghapus data Anda secara permanen</li>
+              <li>Pemberitahuan jika terjadi pelanggaran keamanan data</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-4 bg-dark text-white mt-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>ShopX</h5>
+          <p class="small">Platform e-commerce dengan keamanan tingkat tinggi yang mengutamakan perlindungan data pelanggan.</p>
+          <p class="small">&copy; 2023 ShopX. Hak Cipta Dilindungi.</p>
+        </div>
+        <div class="col-md-6">
+          <h5>Kontak</h5>
+          <ul class="list-unstyled">
+            <li><i class="fas fa-envelope me-2"></i>security@shopx.com</li>
+            <li><i class="fas fa-phone me-2"></i>+62 123-456-789</li>
+            <li><i class="fas fa-shield-alt me-2"></i><a href="/security-info" class="text-white">Informasi Keamanan</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil Saya - ShopX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .profile-container {
+      max-width: 800px;
+      margin: 40px auto;
+    }
+    
+    .profile-card {
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+    
+    .profile-header {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: white;
+      color: #6a11cb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 20px;
+    }
+    
+    .nav-pills .nav-link.active {
+      background-color: #6a11cb;
+    }
+    
+    .nav-pills .nav-link {
+      color: #333;
+    }
+    
+    .form-control:focus {
+      box-shadow: none;
+      border-color: #6a11cb;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #5910a0 0%, #1e65d6 100%);
+    }
+    
+    .security-info {
+      font-size: 14px;
+      padding: 10px 15px;
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      border-left: 4px solid #6a11cb;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header/Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="fas fa-shopping-bag me-2"></i>ShopX
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Beranda</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/products">Produk</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">Tentang Kami</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Kontak</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/cart">
+              <i class="fas fa-shopping-cart me-1"></i>Keranjang
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-user me-1"></i><%= user.username %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+              <li><a class="dropdown-item active" href="/users/profile">Profil</a></li>
+              <li><a class="dropdown-item" href="/orders/history">Pesanan</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/logout">Keluar</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Profile Content -->
+  <div class="container profile-container">
+    <% if (success) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i> <%= success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+    
+    <% if (error) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i> <%= error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+    
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <h3><%= user.full_name || user.username %></h3>
+        <p class="mb-0"><%= user.email %></p>
+      </div>
+      
+      <div class="card-body p-4">
+        <ul class="nav nav-pills mb-4" id="profileTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="profile-tab" data-bs-toggle="pill" data-bs-target="#profile-pane" type="button" role="tab">
+              <i class="fas fa-user-edit me-2"></i>Edit Profil
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="security-tab" data-bs-toggle="pill" data-bs-target="#security-pane" type="button" role="tab">
+              <i class="fas fa-shield-alt me-2"></i>Keamanan
+            </button>
+          </li>
+        </ul>
+        
+        <div class="tab-content" id="profileTabContent">
+          <!-- Edit Profile Tab -->
+          <div class="tab-pane fade show active" id="profile-pane" role="tabpanel" tabindex="0">
+            <form action="/users/profile" method="POST">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="username" class="form-label">Username</label>
+                  <input type="text" class="form-control" id="username" name="username" value="<%= user.username %>" disabled>
+                  <div class="form-text">Username tidak dapat diubah</div>
+                </div>
+                <div class="col-md-6">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" disabled>
+                  <div class="form-text">Email tidak dapat diubah</div>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="full_name" class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-control" id="full_name" name="full_name" value="<%= user.full_name %>" required>
+              </div>
+              
+              <div class="mb-3">
+                <label for="address" class="form-label">Alamat</label>
+                <textarea class="form-control" id="address" name="address" rows="3"><%= user.address || '' %></textarea>
+                <div class="form-text">
+                  <i class="fas fa-lock-alt"></i> Dienkripsi dengan AES-256
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <label for="phone_number" class="form-label">Nomor Telepon</label>
+                <input type="text" class="form-control" id="phone_number" name="phone_number" value="<%= user.phone_number || '' %>">
+                <div class="form-text">
+                  <i class="fas fa-lock-alt"></i> Dienkripsi dengan AES-256
+                </div>
+              </div>
+              
+              <div class="security-info mb-4">
+                <i class="fas fa-shield-alt me-2"></i>
+                <span><strong>Penting:</strong> Data alamat dan nomor telepon Anda dienkripsi menggunakan AES-256 dan hanya didekripsi saat dibutuhkan. Data ini tidak pernah disimpan dalam bentuk plaintext di database kami.</span>
+              </div>
+              
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-save me-2"></i>Simpan Perubahan
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <!-- Security Tab -->
+          <div class="tab-pane fade" id="security-pane" role="tabpanel" tabindex="0">
+            <h5 class="mb-4">Informasi Keamanan Akun</h5>
+            
+            <div class="card mb-4">
+              <div class="card-body">
+                <h6><i class="fas fa-lock text-primary me-2"></i>Perlindungan Data</h6>
+                <p>Data sensitif Anda seperti alamat dan nomor telepon dienkripsi menggunakan algoritma AES-256 sebelum disimpan di database kami. Hanya Anda yang dapat melihat data asli.</p>
+              </div>
+            </div>
+            
+            <div class="card mb-4">
+              <div class="card-body">
+                <h6><i class="fas fa-key text-primary me-2"></i>Manajemen Password</h6>
+                <p>Password Anda tidak pernah disimpan dalam bentuk plaintext. Kami menggunakan algoritma hash bcrypt yang aman untuk melindungi password Anda.</p>
+                <hr>
+                <a href="/users/change-password" class="btn btn-outline-primary">
+                  <i class="fas fa-key me-2"></i>Ganti Password
+                </a>
+              </div>
+            </div>
+            
+            <div class="card">
+              <div class="card-body">
+                <h6><i class="fas fa-credit-card text-primary me-2"></i>Informasi Pembayaran</h6>
+                <p>Data kartu kredit Anda dienkripsi dengan AES-256 dan hanya didekripsi saat benar-benar diperlukan untuk pemrosesan pembayaran.</p>
+                <hr>
+                <a href="/users/payment-info" class="btn btn-outline-primary">
+                  <i class="fas fa-credit-card me-2"></i>Kelola Informasi Pembayaran
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4 mt-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0">&copy; 2023 ShopX. Hak Cipta Dilindungi.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <p class="mb-0">Dilindungi oleh enkripsi AES-256</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

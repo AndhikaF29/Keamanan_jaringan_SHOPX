@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - ShopX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .checkout-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    
+    .checkout-card {
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+    }
+    
+    .order-summary {
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      position: sticky;
+      top: 20px;
+    }
+    
+    .summary-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .summary-item:last-child {
+      border-bottom: none;
+    }
+    
+    .summary-product-title {
+      font-weight: 600;
+    }
+    
+    .checkout-total {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #6a11cb;
+    }
+    
+    .secure-badge {
+      display: inline-block;
+      background-color: #f8f9fa;
+      padding: 8px 12px;
+      border-radius: 50px;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+    }
+    
+    .card-icon {
+      font-size: 1.8rem;
+      color: #6c757d;
+      margin-right: 10px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #5910a0 0%, #1e65d6 100%);
+    }
+    
+    .btn-outline-primary {
+      color: #6a11cb;
+      border-color: #6a11cb;
+    }
+    
+    .btn-outline-primary:hover {
+      background-color: #6a11cb;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header/Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="fas fa-shopping-bag me-2"></i>ShopX
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Beranda</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/products">Produk</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">Tentang Kami</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Kontak</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/cart">
+              <i class="fas fa-shopping-cart me-1"></i>Keranjang
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-user me-1"></i><%= user.username %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+              <li><a class="dropdown-item" href="/users/profile">Profil</a></li>
+              <li><a class="dropdown-item" href="/orders/history">Pesanan</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/logout">Keluar</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Checkout Content -->
+  <div class="container py-5 checkout-container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Beranda</a></li>
+        <li class="breadcrumb-item"><a href="/cart" class="text-decoration-none">Keranjang</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+      </ol>
+    </nav>
+    
+    <h2 class="mb-4">Checkout</h2>
+    
+    <div class="row">
+      <!-- Checkout Form -->
+      <div class="col-lg-8">
+        <form id="checkoutForm" action="/orders/place" method="POST">
+          <!-- Shipping Information -->
+          <div class="checkout-card p-4 mb-4">
+            <h4 class="mb-3">Informasi Pengiriman</h4>
+            
+            <div class="secure-badge">
+              <i class="fas fa-lock me-2"></i>Data dienkripsi dengan AES-256
+            </div>
+            
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="fullName" class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-control" id="fullName" name="fullName" value="<%= user.fullname || '' %>" required>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="phoneNumber" class="form-label">Nomor Telepon</label>
+                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" value="<%= user.phone || '' %>" required>
+              </div>
+              
+              <div class="col-12">
+                <label for="shippingAddress" class="form-label">Alamat Pengiriman</label>
+                <textarea class="form-control" id="shippingAddress" name="shippingAddress" rows="3" required><%= user.address || '' %></textarea>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="city" class="form-label">Kota</label>
+                <input type="text" class="form-control" id="city" name="city" required>
+              </div>
+              
+              <div class="col-md-4">
+                <label for="province" class="form-label">Provinsi</label>
+                <select class="form-select" id="province" name="province" required>
+                  <option value="" selected disabled>Pilih Provinsi...</option>
+                  <option value="DKI Jakarta">DKI Jakarta</option>
+                  <option value="Jawa Barat">Jawa Barat</option>
+                  <option value="Jawa Tengah">Jawa Tengah</option>
+                  <option value="Jawa Timur">Jawa Timur</option>
+                  <option value="Bali">Bali</option>
+                  <option value="Sumatera Utara">Sumatera Utara</option>
+                  <option value="Sumatera Selatan">Sumatera Selatan</option>
+                  <!-- More provinces... -->
+                </select>
+              </div>
+              
+              <div class="col-md-2">
+                <label for="postalCode" class="form-label">Kode Pos</label>
+                <input type="text" class="form-control" id="postalCode" name="postalCode" required>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Payment Information -->
+          <div class="checkout-card p-4 mb-4">
+            <h4 class="mb-3">Informasi Pembayaran</h4>
+            
+            <div class="secure-badge">
+              <i class="fas fa-lock me-2"></i>Data dienkripsi dengan AES-256
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Metode Pembayaran</label>
+              <div class="d-flex flex-wrap gap-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="creditCard" value="credit_card" checked>
+                  <label class="form-check-label" for="creditCard">
+                    <i class="fab fa-cc-visa card-icon"></i>Kartu Kredit
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="paypal" value="paypal">
+                  <label class="form-check-label" for="paypal">
+                    <i class="fab fa-paypal card-icon"></i>PayPal
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="bankTransfer" value="bank_transfer">
+                  <label class="form-check-label" for="bankTransfer">
+                    <i class="fas fa-university card-icon"></i>Transfer Bank
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Credit Card Information (shows/hides based on payment method) -->
+            <div id="creditCardInfo">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="cardholderName" class="form-label">Nama Pemilik Kartu</label>
+                  <input type="text" class="form-control" id="cardholderName" name="cardholderName">
+                </div>
+                
+                <div class="col-md-6">
+                  <label for="cardNumber" class="form-label">Nomor Kartu</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="XXXX XXXX XXXX XXXX">
+                    <span class="input-group-text">
+                      <i class="fab fa-cc-visa me-1"></i>
+                      <i class="fab fa-cc-mastercard me-1"></i>
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="expiryMonth" class="form-label">Bulan Kedaluwarsa</label>
+                  <select class="form-select" id="expiryMonth" name="expiryMonth">
+                    <option value="" selected disabled>Bulan</option>
+                    <% for (let i = 1; i <= 12; i++) { %>
+                      <option value="<%= i %>"><%= i.toString().padStart(2, '0') %></option>
+                    <% } %>
+                  </select>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="expiryYear" class="form-label">Tahun Kedaluwarsa</label>
+                  <select class="form-select" id="expiryYear" name="expiryYear">
+                    <option value="" selected disabled>Tahun</option>
+                    <% const currentYear = new Date().getFullYear(); %>
+                    <% for (let i = currentYear; i <= currentYear + 10; i++) { %>
+                      <option value="<%= i %>"><%= i %></option>
+                    <% } %>
+                  </select>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="cvv" class="form-label">CVV</label>
+                  <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123">
+                </div>
+              </div>
+            </div>
+            
+            <!-- PayPal Info (will be shown when PayPal is selected) -->
+            <div id="paypalInfo" class="d-none">
+              <p class="text-muted">Anda akan diarahkan ke PayPal untuk menyelesaikan pembayaran setelah menekan tombol "Buat Pesanan".</p>
+            </div>
+            
+            <!-- Bank Transfer Info (will be shown when Bank Transfer is selected) -->
+            <div id="bankTransferInfo" class="d-none">
+              <p class="mb-2">Silakan transfer ke rekening bank berikut:</p>
+              <div class="card p-3 bg-light mb-3">
+                <p class="mb-1"><strong>Bank:</strong> Bank Mandiri</p>
+                <p class="mb-1"><strong>Nomor Rekening:</strong> 1234567890</p>
+                <p class="mb-1"><strong>Atas Nama:</strong> PT ShopX Indonesia</p>
+              </div>
+              <p class="small text-muted">Pesanan Anda akan diproses setelah pembayaran dikonfirmasi.</p>
+            </div>
+          </div>
+          
+          <!-- Order Notes -->
+          <div class="checkout-card p-4 mb-4">
+            <h4 class="mb-3">Catatan Pesanan (Opsional)</h4>
+            <textarea class="form-control" id="orderNotes" name="orderNotes" rows="3" placeholder="Instruksi pengiriman atau catatan khusus lainnya"></textarea>
+          </div>
+          
+          <!-- Confirm Order Button (Only visible in mobile view) -->
+          <div class="d-lg-none">
+            <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+              <i class="fas fa-check-circle me-2"></i>Buat Pesanan
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Order Summary -->
+      <div class="col-lg-4">
+        <div class="order-summary">
+          <h4 class="mb-4">Ringkasan Pesanan</h4>
+          
+          <!-- Order Items -->
+          <div class="summary-items mb-3">
+            <% cartItems.forEach(function(item) { %>
+              <div class="summary-item d-flex justify-content-between">
+                <div>
+                  <p class="summary-product-title mb-0"><%= item.name %></p>
+                  <small class="text-muted"><%= item.quantity %> x Rp <%= item.price.toLocaleString('id-ID') %></small>
+                </div>
+                <span>Rp <%= (item.price * item.quantity).toLocaleString('id-ID') %></span>
+              </div>
+            <% }); %>
+          </div>
+          
+          <!-- Subtotal -->
+          <div class="d-flex justify-content-between mb-2">
+            <span>Subtotal</span>
+            <span>Rp <%= cartTotal.total_price.toLocaleString('id-ID') %></span>
+          </div>
+          
+          <!-- Shipping -->
+          <div class="d-flex justify-content-between mb-2">
+            <span>Pengiriman</span>
+            <span>Gratis</span>
+          </div>
+          
+          <!-- Tax -->
+          <div class="d-flex justify-content-between mb-2">
+            <span>Pajak (11%)</span>
+            <% const tax = cartTotal.total_price * 0.11; %>
+            <span>Rp <%= tax.toLocaleString('id-ID') %></span>
+          </div>
+          
+          <hr class="my-3">
+          
+          <!-- Total -->
+          <div class="d-flex justify-content-between mb-4">
+            <span class="fw-bold">Total</span>
+            <% const grandTotal = cartTotal.total_price + tax; %>
+            <span class="checkout-total">Rp <%= grandTotal.toLocaleString('id-ID') %></span>
+          </div>
+          
+          <!-- Place Order Button -->
+          <button type="submit" form="checkoutForm" class="btn btn-primary btn-lg w-100 d-none d-lg-block">
+            <i class="fas fa-check-circle me-2"></i>Buat Pesanan
+          </button>
+          
+          <!-- Secure Checkout Info -->
+          <div class="mt-3 small text-center text-muted">
+            <i class="fas fa-lock me-1"></i>
+            Checkout aman dengan enkripsi AES-256
+          </div>
+          
+          <!-- Return to Cart Link -->
+          <div class="mt-3 text-center">
+            <a href="/cart" class="text-decoration-none">
+              <i class="fas fa-arrow-left me-1"></i>Kembali ke Keranjang
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4 mt-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0">&copy; 2023 ShopX. Hak Cipta Dilindungi.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <p class="mb-0">Dilindungi oleh enkripsi AES-256</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Payment method toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const creditCardRadio = document.getElementById('creditCard');
+      const paypalRadio = document.getElementById('paypal');
+      const bankTransferRadio = document.getElementById('bankTransfer');
+      
+      const creditCardInfo = document.getElementById('creditCardInfo');
+      const paypalInfo = document.getElementById('paypalInfo');
+      const bankTransferInfo = document.getElementById('bankTransferInfo');
+      
+      function updatePaymentInfoDisplay() {
+        creditCardInfo.classList.add('d-none');
+        paypalInfo.classList.add('d-none');
+        bankTransferInfo.classList.add('d-none');
+        
+        if (creditCardRadio.checked) {
+          creditCardInfo.classList.remove('d-none');
+        } else if (paypalRadio.checked) {
+          paypalInfo.classList.remove('d-none');
+        } else if (bankTransferRadio.checked) {
+          bankTransferInfo.classList.remove('d-none');
+        }
+      }
+      
+      // Initial display
+      updatePaymentInfoDisplay();
+      
+      // Event listeners for payment method radios
+      creditCardRadio.addEventListener('change', updatePaymentInfoDisplay);
+      paypalRadio.addEventListener('change', updatePaymentInfoDisplay);
+      bankTransferRadio.addEventListener('change', updatePaymentInfoDisplay);
+      
+      // Format credit card number with spaces
+      const cardNumberInput = document.getElementById('cardNumber');
+      cardNumberInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+        let formattedValue = '';
+        
+        for (let i = 0; i < value.length; i++) {
+          if (i > 0 && i % 4 === 0) {
+            formattedValue += ' ';
+          }
+          formattedValue += value[i];
+        }
+        
+        e.target.value = formattedValue;
+      });
+    });
+  </script>
+</body>
+</html> 

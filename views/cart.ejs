@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keranjang Belanja - ShopX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .cart-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .cart-item {
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      transition: all 0.3s;
+    }
+    
+    .cart-item:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cart-img {
+      height: 100px;
+      width: 100px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    
+    .cart-product-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .cart-summary {
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+    }
+    
+    .input-group-quantity {
+      width: 120px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #5910a0 0%, #1e65d6 100%);
+    }
+    
+    .btn-outline-primary {
+      color: #6a11cb;
+      border-color: #6a11cb;
+    }
+    
+    .btn-outline-primary:hover {
+      background-color: #6a11cb;
+      color: white;
+    }
+    
+    .cart-total {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #6a11cb;
+    }
+    
+    .empty-cart {
+      text-align: center;
+      padding: 50px 0;
+    }
+    
+    .empty-cart i {
+      font-size: 5rem;
+      color: #e0e0e0;
+      margin-bottom: 20px;
+    }
+    
+    .quantity-control {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header/Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="fas fa-shopping-bag me-2"></i>ShopX
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Beranda</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/products">Produk</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">Tentang Kami</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Kontak</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" href="/cart">
+              <i class="fas fa-shopping-cart me-1"></i>Keranjang
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-user me-1"></i><%= user.username %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+              <li><a class="dropdown-item" href="/users/profile">Profil</a></li>
+              <li><a class="dropdown-item" href="/orders/history">Pesanan</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/logout">Keluar</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Cart Content -->
+  <div class="container py-5 cart-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2><i class="fas fa-shopping-cart me-3"></i>Keranjang Belanja</h2>
+      <a href="/products" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-2"></i>Lanjutkan Belanja
+      </a>
+    </div>
+    
+    <% if (cartItems.length === 0) { %>
+      <!-- Empty Cart -->
+      <div class="empty-cart">
+        <i class="fas fa-shopping-cart"></i>
+        <h3>Keranjang Anda Kosong</h3>
+        <p class="text-muted mb-4">Anda belum menambahkan produk apapun ke keranjang.</p>
+        <a href="/products" class="btn btn-primary btn-lg">
+          <i class="fas fa-shopping-bag me-2"></i>Mulai Belanja
+        </a>
+      </div>
+    <% } else { %>
+      <div class="row">
+        <!-- Cart Items -->
+        <div class="col-lg-8">
+          <div id="cartItemsContainer">
+            <% cartItems.forEach(function(item) { %>
+              <div class="cart-item p-3 mb-3" data-id="<%= item.id %>">
+                <div class="row align-items-center">
+                  <!-- Product Image -->
+                  <div class="col-md-2 mb-3 mb-md-0 text-center">
+                    <img src="<%= item.image_url || 'https://via.placeholder.com/100x100?text=No+Image' %>" class="cart-img" alt="<%= item.name %>">
+                  </div>
+                  
+                  <!-- Product Info -->
+                  <div class="col-md-4 mb-3 mb-md-0">
+                    <h5 class="cart-product-title"><%= item.name %></h5>
+                    <div class="text-muted small"><%= item.stock %> tersedia</div>
+                  </div>
+                  
+                  <!-- Quantity Control -->
+                  <div class="col-md-2 mb-3 mb-md-0 text-center">
+                    <div class="d-flex align-items-center justify-content-center">
+                      <div class="btn btn-sm btn-outline-secondary quantity-control" onclick="updateQuantity('<%= item.id %>', -1)">-</div>
+                      <input type="number" class="form-control mx-2 text-center" id="quantity-<%= item.id %>" value="<%= item.quantity %>" min="1" max="<%= item.stock %>" style="width: 60px" readonly>
+                      <div class="btn btn-sm btn-outline-secondary quantity-control" onclick="updateQuantity('<%= item.id %>', 1)">+</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Price -->
+                  <div class="col-md-2 mb-3 mb-md-0 text-center">
+                    <div class="fw-bold">Rp <%= item.price.toLocaleString('id-ID') %></div>
+                    <div class="text-muted small">per item</div>
+                  </div>
+                  
+                  <!-- Subtotal & Remove -->
+                  <div class="col-md-2 text-end">
+                    <div class="fw-bold text-primary mb-2">Rp <%= (item.price * item.quantity).toLocaleString('id-ID') %></div>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem('<%= item.id %>')">
+                      <i class="fas fa-trash"></i> Hapus
+                    </button>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+          
+          <!-- Cart Actions -->
+          <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-outline-danger" onclick="clearCart()">
+              <i class="fas fa-trash-alt me-2"></i>Kosongkan Keranjang
+            </button>
+            <button type="button" class="btn btn-outline-primary" id="updateCartBtn" disabled>
+              <i class="fas fa-sync-alt me-2"></i>Perbarui Keranjang
+            </button>
+          </div>
+        </div>
+        
+        <!-- Cart Summary -->
+        <div class="col-lg-4 mt-4 mt-lg-0">
+          <div class="cart-summary">
+            <h4 class="mb-4">Ringkasan Pesanan</h4>
+            
+            <div class="d-flex justify-content-between mb-2">
+              <span>Subtotal (<%= cartTotal.total_items %> item)</span>
+              <span>Rp <%= cartTotal.total_price.toLocaleString('id-ID') %></span>
+            </div>
+            
+            <div class="d-flex justify-content-between mb-2">
+              <span>Pengiriman</span>
+              <span>Gratis</span>
+            </div>
+            
+            <hr class="my-3">
+            
+            <div class="d-flex justify-content-between mb-4">
+              <span class="fw-bold">Total</span>
+              <span class="cart-total">Rp <%= cartTotal.total_price.toLocaleString('id-ID') %></span>
+            </div>
+            
+            <a href="/orders/checkout" class="btn btn-primary btn-lg w-100">
+              <i class="fas fa-credit-card me-2"></i>Lanjutkan ke Checkout
+            </a>
+            
+            <div class="mt-3 small text-center text-muted">
+              <i class="fas fa-lock me-1"></i>
+              Pembayaran aman dengan enkripsi AES-256
+            </div>
+          </div>
+          
+          <!-- Accepted Payment Methods -->
+          <div class="mt-4 text-center">
+            <div class="mb-2 text-muted">Metode Pembayaran</div>
+            <i class="fab fa-cc-visa fa-2x mx-2 text-muted"></i>
+            <i class="fab fa-cc-mastercard fa-2x mx-2 text-muted"></i>
+            <i class="fab fa-cc-paypal fa-2x mx-2 text-muted"></i>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4 mt-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0">&copy; 2023 ShopX. Hak Cipta Dilindungi.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <p class="mb-0">Dilindungi oleh enkripsi AES-256</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Cart update functions
+    let updatedItems = new Set();
+    
+    function updateQuantity(itemId, change) {
+      const quantityInput = document.getElementById(`quantity-${itemId}`);
+      let currentQuantity = parseInt(quantityInput.value);
+      const maxQuantity = parseInt(quantityInput.getAttribute('max'));
+      
+      // Calculate new quantity
+      let newQuantity = currentQuantity + change;
+      
+      // Validate quantity
+      if (newQuantity < 1) {
+        newQuantity = 1;
+      } else if (newQuantity > maxQuantity) {
+        newQuantity = maxQuantity;
+      }
+      
+      // Only update if changed
+      if (newQuantity !== currentQuantity) {
+        quantityInput.value = newQuantity;
+        updatedItems.add(itemId);
+        document.getElementById('updateCartBtn').disabled = false;
+      }
+    }
+    
+    function removeItem(itemId) {
+      if (confirm('Apakah Anda yakin ingin menghapus item ini dari keranjang?')) {
+        fetch(`/cart/remove/${itemId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.reload();
+          } else {
+            alert('Gagal menghapus item: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat menghapus item');
+        });
+      }
+    }
+    
+    function clearCart() {
+      if (confirm('Apakah Anda yakin ingin mengosongkan keranjang?')) {
+        fetch('/cart/clear', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.reload();
+          } else {
+            alert('Gagal mengosongkan keranjang: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat mengosongkan keranjang');
+        });
+      }
+    }
+    
+    document.getElementById('updateCartBtn').addEventListener('click', function() {
+      // Update each changed item
+      const updatePromises = [];
+      
+      updatedItems.forEach(itemId => {
+        const quantity = document.getElementById(`quantity-${itemId}`).value;
+        
+        const updatePromise = fetch(`/cart/update/${itemId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ quantity })
+        }).then(response => response.json());
+        
+        updatePromises.push(updatePromise);
+      });
+      
+      Promise.all(updatePromises)
+        .then(() => {
+          window.location.reload();
+        })
+        .catch(error => {
+          console.error('Error updating cart:', error);
+          alert('Terjadi kesalahan saat memperbarui keranjang');
+        });
+    });
+  </script>
+</body>
+</html> 

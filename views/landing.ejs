@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopX - Tempat Belanja Elektronik Terpercaya</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .hero-section {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      padding: 70px 0;
+      margin-bottom: 3rem;
+    }
+    
+    .security-feature {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 1.5rem;
+      height: 100%;
+      transition: all 0.3s;
+    }
+    
+    .security-feature:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .security-icon {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+    
+    .product-card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .category-box {
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      transition: all 0.3s;
+    }
+    
+    .category-box:hover {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+    }
+    
+    .category-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 3rem 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header/Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="fas fa-shopping-bag me-2"></i>ShopX
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/">Beranda</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/products">Produk</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/security-info">Keamanan Data</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">Tentang Kami</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Kontak</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <% if (user) { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/cart">
+                <i class="fas fa-shopping-cart me-1"></i>Keranjang
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                <i class="fas fa-user me-1"></i><%= user.username %>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+                <li><a class="dropdown-item" href="/users/profile">Profil</a></li>
+                <li><a class="dropdown-item" href="/orders/history">Pesanan</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/logout">Keluar</a></li>
+              </ul>
+            </li>
+          <% } else { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Masuk</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Daftar</a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <h1 class="display-4 fw-bold mb-4">Belanja Elektronik Dengan Aman dan Terpercaya</h1>
+          <p class="lead mb-4">ShopX hadir dengan perlindungan data pengguna menggunakan enkripsi AES-256 untuk melindungi informasi pribadi dan data pembayaran Anda.</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <a href="/products" class="btn btn-light btn-lg px-4 me-md-2">Belanja Sekarang</a>
+            <a href="/security-info" class="btn btn-outline-light btn-lg px-4">Keamanan Data</a>
+          </div>
+        </div>
+        <div class="col-lg-6 d-none d-lg-block">
+          <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=350" class="img-fluid rounded" alt="ShopX Electronics">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fitur Keamanan -->
+  <section class="container mb-5">
+    <h2 class="text-center mb-5">Perlindungan Data Kelas Dunia</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="security-feature">
+          <div class="security-icon">
+            <i class="fas fa-lock"></i>
+          </div>
+          <h4>Enkripsi AES-256</h4>
+          <p>Data sensitif Anda dienkripsi menggunakan algoritma AES-256 yang diakui secara global sebagai standar keamanan tertinggi.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="security-feature">
+          <div class="security-icon">
+            <i class="fas fa-credit-card"></i>
+          </div>
+          <h4>Pembayaran Aman</h4>
+          <p>Informasi kartu kredit Anda dienkripsi dan tidak pernah disimpan dalam bentuk plaintext, memastikan transaksi yang aman.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="security-feature">
+          <div class="security-icon">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <h4>Privasi Pengguna</h4>
+          <p>Informasi pribadi Anda seperti alamat dan nomor telepon dilindungi dengan enkripsi end-to-end.</p>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <a href="/security-info" class="btn btn-primary">Pelajari Lebih Lanjut tentang Keamanan Data</a>
+    </div>
+  </section>
+
+  <!-- Kategori Populer -->
+  <section class="container mb-5">
+    <h2 class="text-center mb-5">Kategori Populer</h2>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <a href="/products/category/smartphone" class="text-decoration-none text-dark">
+          <div class="category-box">
+            <div class="category-icon">
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h5>Smartphone</h5>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="/products/category/laptop" class="text-decoration-none text-dark">
+          <div class="category-box">
+            <div class="category-icon">
+              <i class="fas fa-laptop"></i>
+            </div>
+            <h5>Laptop</h5>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="/products/category/accessories" class="text-decoration-none text-dark">
+          <div class="category-box">
+            <div class="category-icon">
+              <i class="fas fa-headphones"></i>
+            </div>
+            <h5>Aksesoris</h5>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="/products/category/camera" class="text-decoration-none text-dark">
+          <div class="category-box">
+            <div class="category-icon">
+              <i class="fas fa-camera"></i>
+            </div>
+            <h5>Kamera</h5>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Produk Terlaris -->
+  <section class="container mb-5">
+    <h2 class="text-center mb-5">Produk Terlaris</h2>
+    <div class="row g-4">
+      <!-- Produk 1 -->
+      <div class="col-md-3">
+        <div class="product-card h-100">
+          <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Smartphone X Pro">
+          <div class="card-body d-flex flex-column">
+            <span class="badge bg-primary mb-2">Smartphone</span>
+            <h5 class="card-title">Smartphone X Pro</h5>
+            <p class="card-text text-success fw-bold">Rp 5.899.000</p>
+            <p class="card-text small text-muted mb-3">Snapdragon 8 Gen 2, 12GB RAM, 256GB Storage</p>
+            <div class="d-flex justify-content-between mt-auto">
+              <a href="/products/1" class="btn btn-sm btn-outline-primary">Detail</a>
+              <a href="/cart/add/1" class="btn btn-sm btn-primary"><i class="fas fa-shopping-cart me-1"></i>Beli</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Produk 2 -->
+      <div class="col-md-3">
+        <div class="product-card h-100">
+          <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Laptop UltraBook">
+          <div class="card-body d-flex flex-column">
+            <span class="badge bg-info mb-2">Laptop</span>
+            <h5 class="card-title">Laptop UltraBook S7</h5>
+            <p class="card-text text-success fw-bold">Rp 12.499.000</p>
+            <p class="card-text small text-muted mb-3">Intel Core i7, 16GB RAM, 512GB SSD, 14" OLED</p>
+            <div class="d-flex justify-content-between mt-auto">
+              <a href="/products/2" class="btn btn-sm btn-outline-primary">Detail</a>
+              <a href="/cart/add/2" class="btn btn-sm btn-primary"><i class="fas fa-shopping-cart me-1"></i>Beli</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Produk 3 -->
+      <div class="col-md-3">
+        <div class="product-card h-100">
+          <img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Headphone Noise Cancel">
+          <div class="card-body d-flex flex-column">
+            <span class="badge bg-warning text-dark mb-2">Aksesoris</span>
+            <h5 class="card-title">Headphone NC500</h5>
+            <p class="card-text text-success fw-bold">Rp 2.299.000</p>
+            <p class="card-text small text-muted mb-3">Noise Cancelling, Bluetooth 5.2, Battery 30h</p>
+            <div class="d-flex justify-content-between mt-auto">
+              <a href="/products/3" class="btn btn-sm btn-outline-primary">Detail</a>
+              <a href="/cart/add/3" class="btn btn-sm btn-primary"><i class="fas fa-shopping-cart me-1"></i>Beli</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Produk 4 -->
+      <div class="col-md-3">
+        <div class="product-card h-100">
+          <img src="https://images.unsplash.com/photo-1516724562728-afc824a36e84?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Kamera Mirrorless">
+          <div class="card-body d-flex flex-column">
+            <span class="badge bg-danger mb-2">Kamera</span>
+            <h5 class="card-title">Kamera Mirrorless M200</h5>
+            <p class="card-text text-success fw-bold">Rp 8.999.000</p>
+            <p class="card-text small text-muted mb-3">24MP, 4K Video, WiFi, Bluetooth, Kit 18-55mm</p>
+            <div class="d-flex justify-content-between mt-auto">
+              <a href="/products/4" class="btn btn-sm btn-outline-primary">Detail</a>
+              <a href="/cart/add/4" class="btn btn-sm btn-primary"><i class="fas fa-shopping-cart me-1"></i>Beli</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center mt-4">
+      <a href="/products" class="btn btn-outline-primary">Lihat Semua Produk</a>
+    </div>
+  </section>
+  
+  <!-- Produk Terbaru -->
+  <section class="container mb-5 py-5 bg-light rounded">
+    <h2 class="text-center mb-5">Produk Terbaru</h2>
+    <div class="row g-4">
+      <!-- Produk Terbaru 1 -->
+      <div class="col-md-4">
+        <div class="product-card h-100">
+          <div class="position-absolute top-0 end-0 p-2">
+            <span class="badge bg-danger">Baru</span>
+          </div>
+          <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="SmartWatch Pro">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">SmartWatch Pro X</h5>
+            <p class="card-text text-success fw-bold">Rp 3.199.000</p>
+            <p class="card-text small text-muted mb-3">Heart Rate, SpO2, GPS, 7 Hari Battery</p>
+            <div class="d-flex justify-content-between mt-auto">
+              <a href="/products/5" class="btn btn-sm btn-outline-primary">Detail</a>
+              <a href="/cart/add/5" class="btn btn-sm btn-primary"><i class="fas fa-shopping-cart me-1"></i>Beli</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Produk Terbaru 2 -->
+      <div class="col-md-4">
+        <div class="product-card h-100">
+          <div class="position-absolute top-0 end-0 p-2">
+            <span class="badge bg-danger">Baru</span>
+          </div>
+          <img src="https://images.unsplash.com/photo-1585155770447-2f66e2a397b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Tablet Pro">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Tablet Pro 5</h5>
+            <p class="card-text text-success fw-bold">Rp 7.499.000</p>
+            <p class="card-text small text-muted mb-3">Chipset X2, 8GB RAM, 256GB, 11" 120Hz</p>
+            <div class="d-flex justify-content-between mt-auto">
+              <a href="/products/6" class="btn btn-sm btn-outline-primary">Detail</a>
+              <a href="/cart/add/6" class="btn btn-sm btn-primary"><i class="fas fa-shopping-cart me-1"></i>Beli</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Produk Terbaru 3 -->
+      <div class="col-md-4">
+        <div class="product-card h-100">
+          <div class="position-absolute top-0 end-0 p-2">
+            <span class="badge bg-danger">Baru</span>
+          </div>
+          <img src="https://images.unsplash.com/photo-1600086827875-a63b01f1335c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="TWS Earbuds">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">TWS Earbuds Pro 3</h5>
+            <p class="card-text text-success fw-bold">Rp 1.899.000</p>
+            <p class="card-text small text-muted mb-3">Active Noise Cancellation, Hi-Res Audio</p>
+            <div class="d-flex justify-content-between mt-auto">
+              <a href="/products/7" class="btn btn-sm btn-outline-primary">Detail</a>
+              <a href="/cart/add/7" class="btn btn-sm btn-primary"><i class="fas fa-shopping-cart me-1"></i>Beli</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Promo Section -->
+  <section class="container mb-5">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <h2>Promo Spesial Minggu Ini</h2>
+        <p class="lead">Dapatkan diskon hingga 30% untuk produk elektronik pilihan.</p>
+        <ul class="list-unstyled">
+          <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Gratis ongkir seluruh Indonesia</li>
+          <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Garansi resmi 1 tahun</li>
+          <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Cicilan 0% hingga 12 bulan</li>
+          <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Cashback hingga Rp 500.000</li>
+        </ul>
+        <a href="/promo" class="btn btn-primary mt-3">Lihat Semua Promo</a>
+      </div>
+      <div class="col-lg-6">
+        <img src="https://images.unsplash.com/photo-1601972602288-3be6122aa3e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="img-fluid rounded" alt="Promo Elektronik">
+      </div>
+    </div>
+  </section>
+
+  <!-- Tambahkan CSS untuk styling produk -->
+  <style>
+    .product-card {
+      border: 1px solid #eee;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.3s;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .product-card img {
+      height: 200px;
+      object-fit: cover;
+      transition: all 0.5s;
+    }
+    
+    .product-card:hover img {
+      transform: scale(1.05);
+    }
+    
+    .card-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-4 mb-md-0">
+          <h5 class="mb-3">ShopX</h5>
+          <p>Tempat belanja elektronik terpercaya dengan perlindungan data pengguna menggunakan enkripsi AES-256.</p>
+        </div>
+        <div class="col-md-2 mb-4 mb-md-0">
+          <h5 class="mb-3">Belanja</h5>
+          <ul class="list-unstyled">
+            <li><a href="/products" class="text-white text-decoration-none">Semua Produk</a></li>
+            <li><a href="/products/category/smartphone" class="text-white text-decoration-none">Smartphone</a></li>
+            <li><a href="/products/category/laptop" class="text-white text-decoration-none">Laptop</a></li>
+            <li><a href="/products/category/accessories" class="text-white text-decoration-none">Aksesoris</a></li>
+          </ul>
+        </div>
+        <div class="col-md-2 mb-4 mb-md-0">
+          <h5 class="mb-3">Informasi</h5>
+          <ul class="list-unstyled">
+            <li><a href="/about" class="text-white text-decoration-none">Tentang Kami</a></li>
+            <li><a href="/contact" class="text-white text-decoration-none">Kontak</a></li>
+            <li><a href="/security-info" class="text-white text-decoration-none">Keamanan Data</a></li>
+            <li><a href="/privacy" class="text-white text-decoration-none">Kebijakan Privasi</a></li>
+            <li><a href="/terms" class="text-white text-decoration-none">Syarat & Ketentuan</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h5 class="mb-3">Kontak</h5>
+          <p><i class="fas fa-map-marker-alt me-2"></i>Jl. Keamanan Data No. 256, Jakarta</p>
+          <p><i class="fas fa-phone me-2"></i>(021) 1234-5678</p>
+          <p><i class="fas fa-envelope me-2"></i>info@shopx.com</p>
+          <div class="d-flex mt-3">
+            <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+      </div>
+      <hr class="mt-4 mb-4 border-light">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0">&copy; 2023 ShopX. Hak Cipta Dilindungi.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <p class="mb-0">Dilindungi oleh <a href="/security-info" class="text-white text-decoration-underline">enkripsi keamanan tingkat tinggi</a></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
